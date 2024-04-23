@@ -282,7 +282,8 @@ body.nav-active {
 }
 
 .label-1 {
-  font-size: var(--fontSize-label-1);
+  /* font-size: var(--fontSize-label-1); */
+  font-size: 18px;
 }
 
 .label-2 {
