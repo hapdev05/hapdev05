@@ -1,0 +1,66 @@
+{
+  "name": "File Routing Example",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "file-classification",
+        "options": {}
+      },
+      "id": "Webhook_Receive",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "httpRequest": {
+          "method": "POST",
+          "url": "http://smart-p2p-ai:8501/classify",
+          "json": {
+            "file_name": "={{$json[\"fileName\"]}}"
+          }
+        }
+      },
+      "id": "HTTPRequest_AI",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "command": "bash /home/node/automation-scripts/create-and-move.sh {{$json[\"label\"]}} {{$json[\"localPath\"]}}"
+      },
+      "id": "ExecuteCommand_Move",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [800, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
